@@ -18,12 +18,13 @@ _A Transparent Framework for Privacy Enhancement_
 login 10.32.0.181, 10.32.0.182, 10.32.0.185 (帳密請跟老師申請)
 
 # 開資料庫 (at 10.32.0.181, 10.32.0.185)
-sudo service mysql status # 先看開了沒
+sudo service mysql status               # 先看開了沒
 sudo service mysql start
 
 # 開區塊鏈 (at 10.32.0.181)
 sudo ./run.sh
-miner.start(1) # 開始挖礦後Blockchain才會接收交易
+進入 console 後
+miner.start(1)                          # 開始挖礦後Blockchain才會接收交易
 
 # 開伺服器 (at 10.32.0.181, 10.32.0.185)
 cd /home/ychsu
@@ -143,24 +144,52 @@ C:/Users/hyc/Desktop/web3j-4.3.0/bin> web3j solidity generate -b C:/Users/hyc/De
 3. 本處我們使用 [Geth (Go Ethereum)](https://github.com/ethereum/go-ethereum/wiki/Installing-Geth)，並連接上自己架設的私有鏈進行測試
 
     - 本處已執行過，因此只要執行 `run.sh`
-    
     ```
     sudo run.sh
     ```
     
     - 並在進入 console 後，開始挖礦，讓交易能夠被處理
-    
     ```
     miner.start(1)
     ```
     
     - 停止挖礦或是退出
-    
     ```
     miner.stop()
     exit
     ```
 
+    - 若欲從頭重新啟動私有鏈，編寫完創世區塊 genesis.json 後
+    ```
+    geth --datadir <data directory> init genesis.json
+    ```
+    
+    - 若不確定私有鏈中是否已有可使用之帳戶，先開啟區塊鏈
+    ```
+    init.sh
+    ```
+    
+    - 進入 console 後查詢是否有帳戶，及帳戶中是否有錢可以進行交易
+    ```
+    eth.accounts
+    eth.getBalance(eth.accounts[0])
+    ```
+    
+    - 若沒有帳戶，新增一個，並**記下帳號密碼**
+    ```
+    personal.newAccount()
+    ```
+    
+    - 可將帳戶存下，並在 `.sh` 中紀錄
+    ```
+    account=<created-address>
+    ```
+    
+    - 可將密碼存下，並在 `.sh` 中紀錄密碼位置
+    ```
+    --password "directory"
+    ```
+    
 
 
 ## 資料庫說明
