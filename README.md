@@ -119,14 +119,17 @@ keytool -importcert -noprompt -keystore server.pfx -storepass secret -alias serv
 ## 合約說明
 - 請先至 [Remix](https://remix.ethereum.org) 撰寫合約
 - 編譯成功後下載 `.abi`(defines the smart contract methods) 與 `.bin`(for EVM)
+- 若不使用 Remix 開發，可使用 [Solc](https://solidity.readthedocs.io/en/v0.4.24/installing-solidity.html) 編譯出 `.abi` 及 `.bin`
+```
+C:/Users/hyc/Desktop/web3j-4.3.0/bin> solc C:/Users/hyc/Desktop/tmp.sol --bin --abi --optimize -o C:/Users/hyc/Desktop
+```
 - 下載 [web3j's Command Line Tools](https://github.com/web3j/web3j/releases/tag/4.3.0)
     - 目前建議下載3.5.0；若下載最新版4.3.0，測試過會發生額外問題，可能是bug有待修正
 - 使用 `.abi`、`.bin` 產出對應的 `.java`
     - 即使是用3.5.0，也有可能遇上此網頁提到的問題：https://github.com/web3j/web3j/issues/515
     - 解決方法如同上文，將 private static final String BINARY 變數移除多餘的欄位，只留下數字的部分
 ```properties
-C:\Users\hyc\Desktop\web3j-4.3.0\bin> web3j solidity generate -b C:/Users/hyc/Desktop/tmp.bin -a C:/Users/hyc/Desktop/tmp.abi -o C:/Users/hyc/Desktop/ -p iis.sinica.ychsu.server
-# web3j官方產生出的.java檔會有錯，要把某個東東砍了(待補)
+C:/Users/hyc/Desktop/web3j-4.3.0/bin> web3j solidity generate -b C:/Users/hyc/Desktop/tmp.bin -a C:/Users/hyc/Desktop/tmp.abi -o C:/Users/hyc/Desktop/ -p iis.sinica.ychsu.server
 ```
 
 
