@@ -44,12 +44,12 @@ open firefox to
 2. Bearer 的部分 Swagger 跑不了，所以 log in 拿到 token 後，請改用 [Postman 7.3.4](https://www.getpostman.com/) 繼續測試
 
 
-## 總說明
+## 說明
 - 因為 VM 空間有限 & 筆電環境比較好操作，所以我是先在筆電(Windows)上開發並測試，再送至 VM(Ubuntu) 執行 
 
-**Note:** 建議之後直接在 VM 上裝 IDE，就不用來回跑
+    **Note:** 建議 `How to Run` 執行完後都沒問題的話，直接在 VM 上裝 IDE，就不用來回跑
 
-**Note:** 以下把東西傳到 VM 上的部分，如果已經改成全部都在 VM 上操作，請忽略
+    **Note:** 以下把東西傳到 VM 上的部分，如果已經改成全部都在 VM 上操作，請忽略
 
 1. 開發環境
     - Windows 10
@@ -59,7 +59,7 @@ open firefox to
     - JDK 11
 3. `金鑰`、`憑證`、`合約`、`資料庫`的部分如果有要修改，請參考各自的說明
 
-**Note:** 如果要在 Win10 上跑，請先自行安裝所需的 JDK、MySQL、Ganache 等
+**Note:** 如果要在 Windows 上跑，請先自行安裝所需的 JDK、MySQL、Ganache 等
 
 
 ## 金鑰說明
@@ -203,7 +203,7 @@ CREATE TABLE `preference` (
 3. 啟動後，可透過瀏覽器或 Swagger 進行測試
 4. 測試無誤後，接下來進行打包
     - 打包時如果希望順便進行測試，Command Line 請打上 `clean package`，反之，請打 `clean package -DskipTests`
-    - Run `to2Jar` (Run/Debug Configuration 請選擇 Export2Jar)，它會在 /mediator/target 下產出 `mediator-0.0.1-SNAPSHOT.jar`
+    - Run `to2Jar` (Run/Debug Configuration 請選擇 toJar)，它會在 /mediator/target 下產出 `mediator-0.0.1-SNAPSHOT.jar`
 
 - Ubuntu 部署與執行
 1. 先連線
@@ -222,9 +222,10 @@ CREATE TABLE `preference` (
     - 測試 (https://10.32.0.181:8443/)
 
 **Note:** 不論是哪個環境，執行前記得資料庫跟區塊鏈都要先開
+**Note:** 看完覺得麻煩的話，就直接在 VM 上開發吧
 
 
-## Ubuntu Install JDK
+## _Ubuntu Install JDK_
 Java 11 開始不能直接安裝了，要先至 Oracle 官網登入並下載 jdk-11.0.4_linux-x64_bin.tar.gz
 ```properties
 # 刪掉之前裝的雜物 (可以跳過)
@@ -249,7 +250,7 @@ java -version
 ```
 
 
-## JDBC use SSL
+## _JDBC use SSL_
 ```properties
 # Generate CA Certificate
 openssl genrsa 2048 > ca-key.pem
@@ -315,5 +316,54 @@ spring.datasource.url = jdbc:mysql://127.0.0.1:3306/controller?useUnicode=true&c
     2. firewall only allow port 22 or ip authorization
 
 
-## Further information
+## _For Me_
+```properties
+# JAR
+java -jar controller-0.0.1-SNAPSHOT.jar -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+
+# pscp
+cd pscp's location
+
+pscp C:/Users/hyc/Desktop/controller.sql ychsu@10.32.0.185:/home/ychsu
+
+pscp D:/transprivacy/mediator/target/mediator-0.0.1-SNAPSHOT.jar ychsu@10.32.0.181:/home/ychsu
+pscp D:/transprivacy/controller/target/controller-0.0.1-SNAPSHOT.jar ychsu@10.32.0.185:/home/ychsu
+
+# MYSQL
+sudo service mysql status (start、stop)
+
+sudo mysql
+mysql -u transprivacy -p -h 127.0.0.1
+quit
+
+show databases;
+use controller;
+show tables;
+SELECT * from preference;
+
+DROP DATABASE controller;
+DELETE FROM preference WHERE id=3;
+
+select host, user from mysql.user;
+SHOW GRANTS FOR 'testuser'@'localhost';
+
+# MYSQL init
+create database controller;
+sudo mysql -u root -p controller < /home/ychsu/controller.sql
+
+CREATE USER 'transprivacy'@'127.0.0.1' IDENTIFIED BY 'intern';
+GRANT ALL PRIVILEGES ON mediator.* TO 'transprivacy'@'127.0.0.1';
+FLUSH PRIVILEGES;
+GRANT ALL PRIVILEGES ON controller.* TO 'transprivacy'@'127.0.0.1';
+FLUSH PRIVILEGES;
+
+# Linux clear log
+rm -rf /var/log/journal/e58b026cdf2c47798bacf1f0719baf5c
+
+
+ 
+```
+
+
+## _Further information_
 For further information, please refer to the [home](https://github.com/rookieyc).
