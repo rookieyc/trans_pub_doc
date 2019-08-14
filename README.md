@@ -180,7 +180,7 @@ C:/Users/hyc/Desktop/web3j-4.3.0/bin> web3j solidity generate -b C:/Users/hyc/De
     personal.newAccount()
     ```
     
-    - 可將帳戶存下，並在 `.sh` 中紀錄
+    - 將帳戶紀錄在 `.sh` 中
     ```
     account=<created-address>
     ```
