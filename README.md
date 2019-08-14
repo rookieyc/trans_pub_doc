@@ -134,19 +134,23 @@ C:/Users/hyc/Desktop/web3j-4.3.0/bin> web3j solidity generate -b C:/Users/hyc/De
 ```
 
 
-## Geth說明
-- Blockchain測試環境有以下三種
+## 區塊鏈說明
+- Blockchain 測試環境有以下三種
+
 1. Ethereum Test Networks: Ropsten, Rinkeby 等
 2. 開發框架 Truffle 的 [Ganache](https://www.trufflesuite.com/ganache)，為一本地的私有區塊鏈，特點為交易不需要消耗gas，也內建好多組帳號提供互動
 3. 本處我們使用 [Geth (Go Ethereum)](https://github.com/ethereum/go-ethereum/wiki/Installing-Geth)，並連接上自己架設的私有鏈進行測試
+
     - 本處已執行過，因此只要執行 `run.sh`
     ```
     sudo run.sh
     ```
+    
     - 並在進入 console 後，開始挖礦，讓交易能夠被處理
     ```
     miner.start(1)
     ```
+    
     - 停止挖礦或是退出
     ```
     miner.stop()
