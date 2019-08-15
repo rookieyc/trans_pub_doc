@@ -22,7 +22,7 @@ sudo service mysql status               # 先看開了沒
 sudo service mysql start
 
 # 開區塊鏈 (at 10.32.0.181)
-sudo ./run.sh                           # 進入
+sudo ./run.sh                           # 進入 console
 miner.start(1)                          # 開始挖礦後Blockchain才會接收交易
 
 # 開伺服器 (at 10.32.0.181, 10.32.0.185)
