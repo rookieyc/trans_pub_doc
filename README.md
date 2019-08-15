@@ -142,52 +142,36 @@ C:/Users/hyc/Desktop/web3j-4.3.0/bin> web3j solidity generate -b C:/Users/hyc/De
 2. 官方測試鏈 Ethereum Test Networks: Ropsten, Rinkeby 等
 3. 本處我們選擇自架私有鏈，使用 [Geth (Go Ethereum)](https://github.com/ethereum/go-ethereum/wiki/Installing-Geth)
 
-    - 區塊鏈已被初始化、執行，因此只要 `run.sh` 便可開始
-    ```
-    sudo run.sh
-    ```
+```
+# 區塊鏈已被初始化、執行，因此只要 `run.sh` 便可開始
+sudo run.sh
     
-    - 進入 console 後，開始挖礦，讓交易能夠被處理
-    ```
-    miner.start(1)
-    ```
+# 進入 console 後，開始挖礦，讓交易能夠被處理
+miner.start(1)
     
-    - 停止挖礦或是退出
-    ```
-    miner.stop()
-    exit
-    ```
+# 停止挖礦或是退出
+miner.stop()
+exit
 
-    - 若欲從頭重新啟動私有鏈，編寫完創世區塊 genesis.json 後
-    ```
-    geth --datadir <data directory> init genesis.json
-    ```
+# 若欲從頭重新啟動私有鏈，編寫完創世區塊 genesis.json 後
+geth --datadir <data directory> init genesis.json
     
-    - 若不確定私有鏈中是否已有可使用之帳戶，先開啟區塊鏈
-    ```
-    init.sh
-    ```
+# 若不確定私有鏈中是否已有可使用之帳戶，先開啟區塊鏈
+init.sh
     
-    - 進入 console 後查詢是否有帳戶，及帳戶中是否有錢可以進行交易
-    ```
-    eth.accounts
-    eth.getBalance(eth.accounts[0])
-    ```
+# 進入 console 後查詢是否有帳戶，及帳戶中是否有錢可以進行交易
+eth.accounts
+eth.getBalance(eth.accounts[0])
     
-    - 若沒有帳戶，新增一個，並**記下帳號密碼**
-    ```
-    personal.newAccount()
-    ```
+# 若沒有帳戶，新增一個，並**記下帳號密碼**
+personal.newAccount()
     
-    - 將帳戶紀錄在 `.sh` 中
-    ```
-    account=<created-address>
-    ```
+# 將帳戶紀錄在 `.sh` 中
+account=<created-address>
     
-    - 可將密碼存下，並在 `.sh` 中紀錄密碼位置
-    ```
-    --password "directory"
-    ```
+# 可將密碼存下，並在 `.sh` 中紀錄密碼位置
+--password "directory"
+```
     
 
 
