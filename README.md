@@ -353,6 +353,7 @@ spring.datasource.url = jdbc:mysql://127.0.0.1:3306/controller?useUnicode=true&c
 
 ## 其他
 - 目前 Controller A & B 的 DB 是建在一起，記得改一人一個
+- 若空間不夠，可以搜尋 `.ethash/` ，此資料夾為 Ethereum 做挖礦時的 PoW 所用，除181之外皆可刪除
 - 如果要建立新的資料表，記得一系列的建立 Entity > Repository > Service
 - 如果要一個 Server 要同時連兩個以上的 DB (e.g. MYSQL、AWS)，~~請修正`DataSourceConfig`，並仿照`PrimaryConfig.java`建立`TertiaryConfig.java`.~~
 - 存在 DB 中的密碼有加密
