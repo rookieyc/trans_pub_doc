@@ -142,7 +142,7 @@ C:/Users/hyc/Desktop/web3j-4.3.0/bin> web3j solidity generate -b C:/Users/hyc/De
 2. 官方測試鏈 Ethereum Test Networks: Ropsten, Rinkeby 等
 3. 本處我們選擇自架私有鏈，使用 [Geth (Go Ethereum)](https://github.com/ethereum/go-ethereum/wiki/Installing-Geth)
 
-```
+```properties
 # 區塊鏈已被初始化、執行，因此只要 `run.sh` 便可開始
 sudo run.sh
     
