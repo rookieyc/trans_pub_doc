@@ -124,7 +124,7 @@ keytool -importcert -noprompt -keystore server.pfx -storepass secret -alias serv
 ```
 C:/Users/hyc/Desktop> solc C:/Users/hyc/Desktop/tmp.sol --bin --abi --optimize -o C:/Users/hyc/Desktop
 ```
-- 下載 [Web3j's Command Line Tools](https://github.com/web3j/web3j/releases/tag/4.3.0)
+- 下載 [Web3j's Command Line Tools](https://github.com/web3j/web3j/releases)
     - 建議下載3.5.0；若下載最新版4.3.0，測試過會發生不只以下提到的更多問題
     
 - 使用Web3j對 `.abi`、`.bin` 產出對應的 `.java`
