@@ -29,17 +29,18 @@ sudo ./run.sh                           # 進入 console
 miner.start(1)                          # 開始挖礦後 Blockchain 才會接收交易
 
 ! Infura
-! 請先對 W3j.java 進行修改，將 new HttpService 中的參數修改成新創立 project 所得到的 ENDPOINT Key
+! 請先對 W3j.java 進行修改，將 new HttpService 中的參數修改成新創立 Project 所得到的 ENDPOINT Key
 Web3j web3j = Web3j.build(new HttpService("https://ropsten.infura.io/v3/e2c4f89bf4de4d13ab79fb1767e2d0de"));
 
 # 開伺服器 (at 10.32.0.181, 10.32.0.185)
+sudo -i 
 cd /home/ychsu
 
 ! 擇一
-java -jar mediator-0.0.1-SNAPSHOT-geth.jar   # at 10.32.0.181
+java -jar mediator-0.0.1-SNAPSHOT-geth.jar     # at 10.32.0.181
 java -jar mediator-0.0.1-SNAPSHOT-infura.jar   # at 10.32.0.181
 
-java -jar controller-0.0.1-SNAPSHOT.jar # at 10.32.0.185
+java -jar controller-0.0.1-SNAPSHOT.jar        # at 10.32.0.185
 
 # 執行 (at 10.32.0.182)
 open firefox to
@@ -51,12 +52,12 @@ open firefox to
 ## API 測試
 - Import `swagger.json` to [Swagger](https://editor.swagger.io/)
 
-1. Log in 取得 token，前端會直接加至於 http header，所以 Swagger 會回傳網頁檔，而不是字串值
-2. Bearer 的部分 Swagger 跑不了，所以 log in 拿到 token 後，請改用 [Postman 7.3.4](https://www.getpostman.com/) 繼續測試
+1. Log in 取得 token，前端會直接加至於 http header，所以 `Swagger` 會回傳網頁檔，而不是字串值
+2. Bearer 的部分 `Swagger` 跑不了，所以 log in 拿到 token 後，請改用 [Postman 7.3.4](https://www.getpostman.com/) 繼續測試
 
 
 ## 說明
-- 因為 VM 空間有限 & 筆電環境比較好操作，所以我是先在筆電(Windows)上開發並測試，再送至 VM(Ubuntu) 執行 
+- 因為 VM 空間有限 & 筆電環境比較好操作，所以我是先在 `筆電(Windows)` 上開發並測試，再送至 `VM(Ubuntu)` 執行 
 
     **Note:** 建議 `How to Run` 執行完後都沒問題的話，直接在 VM 上裝 IDE，就不用來回跑
 
@@ -144,7 +145,7 @@ C:/Users/hyc/Desktop/web3j-4.3.0/bin> web3j solidity generate -b C:/Users/hyc/De
 
 **Note:** Server執行時有可能遇上此問題 `Transaction has failed with status: null. Gas used: xxxxx. (not-enough gas?)`
 
-解決方法：將 `private static final String BINARY` 變數移除多餘的欄位，只留下**數字**的部分則可解決；經測試 `3.5.0` 及 `4.3.0` 兩版本皆存在此問題
+Solution：將 `private static final String BINARY` 變數移除多餘的欄位，只留下**數字**的部分則可解決；經測試 `3.5.0` 及 `4.3.0` 兩版本皆存在此問題
     
 
 
@@ -157,7 +158,7 @@ C:/Users/hyc/Desktop/web3j-4.3.0/bin> web3j solidity generate -b C:/Users/hyc/De
     Web3j web3j = Web3j.build(new HttpService("https://ropsten.infura.io/<ropsten-endpoint-key>"));
     ```
     - 有一點需要注意，Infura 不提供 `filter` 的功能，因此 `activateFilter(web3j)` 的部分不會執行
-    - 若執行成功，可以到[ropsten.etherscan](https://ropsten.etherscan.io/)，用自己的 address 去查詢交易的情形，應該也可以看出印出的訊息 `deployedAddress` 和 Etherscan 顯示 contract 的建立位置是相同的
+    - 若執行成功，可以到 [ropsten.etherscan](https://ropsten.etherscan.io/)，用自己的 address 去查詢交易的情形，應該也可以看出印出的訊息 `deployedAddress` 和 Etherscan 顯示 contract 的建立位置是相同的
 3. 自架私有鏈，使用 `Geth`
 ```properties
 # 區塊鏈已被初始化、執行，因此只要 `run.sh` 便可開始
@@ -287,7 +288,8 @@ CREATE TABLE `preference` (
     - 測試 (https://10.32.0.181:8443/)
 
 **Note:** 不論是哪個環境，執行前記得資料庫跟區塊鏈都要先開
-**Note:** 看完覺得麻煩的話，就直接在 VM 上開發吧
+
+**Note:** 看完覺得麻煩的話，請直接在 VM 上開發
 
 
 ## _Ubuntu Install JDK_
@@ -434,4 +436,4 @@ rm -rf /var/log/journal/e58b026cdf2c47798bacf1f0719baf5c
 
 
 ## _Further information_
-For further information, please refer to the [home](https://github.com/rookieyc).
+For further information, please refer to the [here](https://github.com/tienshaoku) or [home](https://github.com/rookieyc).
