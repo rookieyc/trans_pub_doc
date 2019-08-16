@@ -5,7 +5,7 @@ _A Transparent Framework for Privacy Enhancement_
 ## _System Arch_
 - Web Application: [Spring Boot Framework 2.1](https://github.com/spring-projects/spring-boot)
 - Database: MySQL
-- ~~.Personal Blockchain for Ethereum: [Ganache v.2.1.0](https://www.trufflesuite.com/ganache).~~
+- Blockchain: [Ganache v.2.1.0](https://www.trufflesuite.com/ganache)、Ropsten、Geth
 
 
 ## _System Arch Picture_
@@ -27,7 +27,6 @@ miner.start(1)                          # 開始挖礦後Blockchain才會接收�
 
 # 若不想開 Geth 可以使用 Infura，對 Java 進行修改
 Web3j web3j = Web3j.build(new HttpService("https://ropsten.infura.io/<ropsten-endpoint-key>"));
-
 
 # 開伺服器 (at 10.32.0.181, 10.32.0.185)
 cd /home/ychsu
