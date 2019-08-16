@@ -25,9 +25,9 @@ sudo service mysql start
 sudo -i                                 # 取得 root 權限
 cd ../usr/local/var/Sinica/2019_Geth
 sudo ./run.sh                           # 進入 console
-miner.start(1)                          # 開始挖礦後Blockchain才會接收交易
+miner.start(1)                          # 開始挖礦後 Blockchain 才會接收交易
 
-# 若不想開 Geth 可以使用 Infura，對 W3j.ava 進行修改
+# 若不想開 Geth 可以使用 Infura，對 W3j.java 進行修改
 # build 中的參數可以修改成新創立 project 所得到的 ENDPOINT Key
 Web3j web3j = Web3j.build(new HttpService("https://ropsten.infura.io/v3/e2c4f89bf4de4d13ab79fb1767e2d0de"));
 
@@ -151,8 +151,9 @@ C:/Users/hyc/Desktop/web3j-4.3.0/bin> web3j solidity generate -b C:/Users/hyc/De
 ```
 Web3j web3j = Web3j.build(new HttpService("https://ropsten.infura.io/<ropsten-endpoint-key>"));
 ```
-- 若執行成功，可以到[ropsten.etherscan](https://ropsten.etherscan.io/)，用自己的 address 去查詢交易的情形，應該也可以看出印出的訊息 `deployedAddress` 和 Etherscan 顯示 contract 的建立位置是相同的
 - 有一點需要注意，Infura 不提供 `filter` 的功能，因此要將 `activateFilter(web3j, deployedContract)` 及 `transactionLog` 兩者註解
+- 若執行成功，可以到[ropsten.etherscan](https://ropsten.etherscan.io/)，用自己的 address 去查詢交易的情形，應該也可以看出印出的訊息 `deployedAddress` 和 Etherscan 顯示 contract 的建立位置是相同的
+
 3. 自架私有鏈，使用 [Geth (Go Ethereum)](https://github.com/ethereum/go-ethereum/wiki/Installing-Geth)
 
 ```properties
