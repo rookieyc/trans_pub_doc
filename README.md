@@ -347,6 +347,10 @@ DELETE FROM preference WHERE id=3;
 select host, user from mysql.user;
 SHOW GRANTS FOR 'testuser'@'localhost';
 
+# 7z
+7z x mediator.7z
+rm -r *     # 連同資料夾全清
+
 # MYSQL init
 create database controller;
 sudo mysql -u root -p controller < /home/ychsu/controller.sql
@@ -359,8 +363,6 @@ FLUSH PRIVILEGES;
 
 # Linux clear log
 rm -rf /var/log/journal/e58b026cdf2c47798bacf1f0719baf5c
-
-
  
 ```
 
