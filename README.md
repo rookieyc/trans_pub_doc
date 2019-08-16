@@ -21,9 +21,13 @@ login 10.32.0.181, 10.32.0.182, 10.32.0.185 (帳密請跟老師申請)
 sudo service mysql status               # 先看開了沒
 sudo service mysql start
 
-# 開區塊鏈 (at 10.32.0.181)
+# 開區塊鏈 Geth (at 10.32.0.181)
 sudo ./run.sh                           # 進入 console
 miner.start(1)                          # 開始挖礦後Blockchain才會接收交易
+
+# 若不想開 Geth 可以使用 Infura，對 Java 進行修改
+Web3j web3j = Web3j.build(new HttpService("https://ropsten.infura.io/<ropsten-endpoint-key>"));
+
 
 # 開伺服器 (at 10.32.0.181, 10.32.0.185)
 cd /home/ychsu
@@ -139,7 +143,7 @@ C:/Users/hyc/Desktop/web3j-4.3.0/bin> web3j solidity generate -b C:/Users/hyc/De
 - Blockchain 測試環境有以下三種
 
 1. 開發框架 Truffle 的 [Ganache](https://www.trufflesuite.com/ganache)，為一本地的私有區塊鏈，特點為交易不需要消耗gas，並已內建多組帳號提供互動
-2. 官方測試鏈 Ethereum Test Networks: Ropsten, Rinkeby 等。要用官方測試鏈測鏈需要藉助 [Infura](https://infura.io/)，註冊並創建一個 project 後，只要拿 `Engpoint` 的 `Key` 並將 Web3j 的建立方式稍作修改就可以
+2. 官方測試鏈 Ethereum Test Networks: Ropsten, Rinkeby 等。要用官方測試鏈測鏈需要藉助 [Infura](https://infura.io/)，註冊並創建一個 project 後，只要拿 `Endpoint` 的 `Key` 並將 Web3j 的建立方式稍作修改就可以
 ```
 Web3j web3j = Web3j.build(new HttpService("https://ropsten.infura.io/<ropsten-endpoint-key>"));
 ```
