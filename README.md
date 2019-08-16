@@ -18,11 +18,16 @@ _A Transparent Framework for Privacy Enhancement_
 login 10.32.0.181, 10.32.0.182, 10.32.0.185 (帳密請跟老師申請)
 
 # 開資料庫 (at 10.32.0.181, 10.32.0.185)
-sudo service mysql status # 先看開了沒
+sudo service mysql status               # 先看開了沒
 sudo service mysql start
 
-# 開區塊鏈 (at 10.32.0.181)
-(待補)
+# 開區塊鏈 Geth (at 10.32.0.181)
+sudo ./run.sh                           # 進入 console
+miner.start(1)                          # 開始挖礦後Blockchain才會接收交易
+
+# 若不想開 Geth 可以使用 Infura，對 Java 進行修改
+Web3j web3j = Web3j.build(new HttpService("https://ropsten.infura.io/<ropsten-endpoint-key>"));
+
 
 # 開伺服器 (at 10.32.0.181, 10.32.0.185)
 cd /home/ychsu
@@ -57,9 +62,10 @@ open firefox to
 2. 部署環境
     - Ubuntu 18.04 (Virtual Machine)
     - JDK 11
-3. `金鑰`、`憑證`、`合約`、`資料庫`的部分如果有要修改，請參考各自的說明
+3. `金鑰`、`憑證`、`合約`、`區塊鏈`、`資料庫`的部分如果有要修改，請參考各自的說明
 
-**Note:** 如果要在 Windows 上跑，請先自行安裝所需的 JDK、MySQL、Ganache 等
+
+**Note:** 如果要在 Win10 上跑，請先自行安裝所需的 JDK、MySQL、Web3j、Geth、Ganache 等
 
 
 ## 金鑰說明
@@ -117,14 +123,64 @@ keytool -importcert -noprompt -keystore server.pfx -storepass secret -alias serv
 
 
 ## 合約說明
-- 請先至 [Remix](https://remix.ethereum.org) 撰寫合約
-- 編譯成功後下載 `.abi`(defines the smart contract methods) 與 `.bin`(for EVM)
-- 下載 [web3j's Command Line Tools](https://github.com/web3j/web3j/releases/tag/4.3.0)
-- 使用 `.abi`、`.bin` 產出對應的 `.java`
-```properties
-C:\Users\hyc\Desktop\web3j-4.3.0\bin> web3j solidity generate -b C:/Users/hyc/Desktop/tmp.bin -a C:/Users/hyc/Desktop/tmp.abi -o C:/Users/hyc/Desktop/ -p iis.sinica.ychsu.server
-# web3j官方產生出的.java檔會有錯，要把某個東東砍了(待補)
+- 可至 [Remix](https://remix.ethereum.org) 撰寫合約
+- 編譯成功後於頁面右方下載 `.abi`(defines the smart contract methods) 與 `.bin`(for EVM)
+- 若不使用 Remix，寫好合約後可使用 [Solc](https://solidity.readthedocs.io/en/v0.4.24/installing-solidity.html) 編譯出 `.abi` 及 `.bin`
 ```
+C:/Users/hyc/Desktop> solc C:/Users/hyc/Desktop/tmp.sol --bin --abi --optimize -o C:/Users/hyc/Desktop
+```
+- 下載 [Web3j's Command Line Tools](https://github.com/web3j/web3j/releases)
+    - 建議下載3.5.0；若下載最新版4.3.0，測試過會發生不只以下提到的更多問題
+    
+- 使用Web3j對 `.abi`、`.bin` 產出對應的 `.java`
+    - 有可能遇上此問題 `Transaction has failed with status: null. Gas used: xxxxx. (not-enough gas?)`
+    - 解決方法：將 `private static final String BINARY` 變數移除多餘的欄位，只留下**數字**的部分則可解決；經測試 `3.5.0` 及 `4.3.0` 兩版本皆存在此問題
+```properties
+C:/Users/hyc/Desktop/web3j-4.3.0/bin> web3j solidity generate -b C:/Users/hyc/Desktop/tmp.bin -a C:/Users/hyc/Desktop/tmp.abi -o C:/Users/hyc/Desktop/ -p iis.sinica.ychsu.server
+```
+
+
+## 區塊鏈說明
+- Blockchain 測試環境有以下三種
+
+1. 開發框架 Truffle 的 [Ganache](https://www.trufflesuite.com/ganache)，為一本地的私有區塊鏈，特點為交易不需要消耗gas，並已內建多組帳號提供互動
+2. 官方測試鏈 Ethereum Test Networks: Ropsten, Rinkeby 等。要用官方測試鏈測鏈需要藉助 [Infura](https://infura.io/)，註冊並創建一個 project 後，只要拿 `Endpoint` 的 `Key` 並將 Web3j 的建立方式稍作修改就可以
+```
+Web3j web3j = Web3j.build(new HttpService("https://ropsten.infura.io/<ropsten-endpoint-key>"));
+```
+3. 自架私有鏈，使用 [Geth (Go Ethereum)](https://github.com/ethereum/go-ethereum/wiki/Installing-Geth)
+
+```properties
+# 區塊鏈已被初始化、執行，因此只要 `run.sh` 便可開始
+sudo run.sh
+    
+# 進入 console 後，開始挖礦，讓交易能夠被處理
+miner.start(1)
+    
+# 停止挖礦或是退出
+miner.stop()
+exit
+
+# 若欲從頭重新啟動私有鏈，編寫完創世區塊 genesis.json 後
+geth --datadir <data directory> init genesis.json
+    
+# 若不確定私有鏈中是否已有可使用之帳戶，先開啟區塊鏈
+init.sh
+    
+# 進入 console 後查詢是否有帳戶，及帳戶中是否有錢可以進行交易
+eth.accounts
+eth.getBalance(eth.accounts[0])
+    
+# 若沒有帳戶，新增一個，並**記下帳號密碼**
+personal.newAccount()
+    
+# 將帳戶紀錄在 `.sh` 中
+account=<created-address>
+    
+# 可將密碼存下，並在 `.sh` 中紀錄密碼位置
+--password "directory"
+```
+    
 
 
 ## 資料庫說明
@@ -306,6 +362,7 @@ spring.datasource.url = jdbc:mysql://127.0.0.1:3306/controller?useUnicode=true&c
 
 ## 其他
 - 目前 Controller A & B 的 DB 是建在一起，記得改一人一個
+- 若空間不夠，可以搜尋 `.ethash/` ，此資料夾為 Ethereum 做挖礦時的 PoW 所用，除181之外皆可刪除
 - 如果要建立新的資料表，記得一系列的建立 Entity > Repository > Service
 - 如果要一個 Server 要同時連兩個以上的 DB (e.g. MYSQL、AWS)，~~請修正`DataSourceConfig`，並仿照`PrimaryConfig.java`建立`TertiaryConfig.java`.~~
 - 存在 DB 中的密碼有加密
