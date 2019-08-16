@@ -31,6 +31,7 @@ miner.start(1)                          # 開始挖礦後 Blockchain 才會接�
 ! Infura
 ! 請先對 W3j.java 進行修改，將 new HttpService 中的參數修改成新創立 Project 所得到的 ENDPOINT Key
 Web3j web3j = Web3j.build(new HttpService("https://ropsten.infura.io/v3/e2c4f89bf4de4d13ab79fb1767e2d0de"));
+! 接著重新打包成 mediator-0.0.1-SNAPSHOT-infura.jar
 
 # 開伺服器 (at 10.32.0.181, 10.32.0.185)
 sudo -i 
@@ -372,8 +373,8 @@ spring.datasource.url = jdbc:mysql://127.0.0.1:3306/controller?useUnicode=true&c
 
 
 ## 其他
-- 目前 Controller A & B 的 DB 是建在一起，記得改一人一個
 - 若空間不夠，可以搜尋 `.ethash/` ，此資料夾為 Ethereum 做挖礦時的 PoW 所用，除181之外皆可刪除
+- 目前 Controller A & B 的 DB 是建在一起，記得改一人一個
 - 如果要建立新的資料表，記得一系列的建立 Entity > Repository > Service
 - 如果要一個 Server 要同時連兩個以上的 DB (e.g. MYSQL、AWS)，~~請修正`DataSourceConfig`，並仿照`PrimaryConfig.java`建立`TertiaryConfig.java`.~~
 - 存在 DB 中的密碼有加密
