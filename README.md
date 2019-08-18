@@ -5,7 +5,7 @@ _A Transparent Framework for Privacy Enhancement_
 ## _System Arch_
 - Web Application: [Spring Boot Framework 2.1](https://github.com/spring-projects/spring-boot)
 - Database: MySQL
-- ~~.Personal Blockchain for Ethereum: [Ganache v.2.1.0](https://www.trufflesuite.com/ganache).~~
+- Blockchain: [Ganache v.2.1.0](https://www.trufflesuite.com/ganache)、[Infura](https://infura.io/)、[Geth (Go Ethereum)](https://github.com/ethereum/go-ethereum/wiki/Installing-Geth)
 
 
 ## _System Arch Picture_
@@ -21,19 +21,27 @@ login 10.32.0.181, 10.32.0.182, 10.32.0.185 (帳密請跟老師申請)
 sudo service mysql status               # 先看開了沒
 sudo service mysql start
 
-# 開區塊鏈 Geth (at 10.32.0.181)
+# 開區塊鏈 (請擇一) (at 10.32.0.181)
+! Geth
+sudo -i                                 # 取得 root 權限
+cd ../usr/local/var/Sinica/2019_Geth
 sudo ./run.sh                           # 進入 console
-miner.start(1)                          # 開始挖礦後Blockchain才會接收交易
+miner.start(1)                          # 開始挖礦後 Blockchain 才會接收交易
 
-# 若不想開 Geth 可以使用 Infura，對 Java 進行修改
-Web3j web3j = Web3j.build(new HttpService("https://ropsten.infura.io/<ropsten-endpoint-key>"));
-
+! Infura
+! 請先對 W3j.java 進行修改，將 new HttpService 中的參數修改成新創立 Project 所得到的 ENDPOINT Key
+Web3j web3j = Web3j.build(new HttpService("https://ropsten.infura.io/v3/e2c4f89bf4de4d13ab79fb1767e2d0de"));
+! 接著重新打包成 mediator-0.0.1-SNAPSHOT-infura.jar
 
 # 開伺服器 (at 10.32.0.181, 10.32.0.185)
+sudo -i 
 cd /home/ychsu
 
-java -jar mediator-0.0.1-SNAPSHOT.jar   # at 10.32.0.181
-java -jar controller-0.0.1-SNAPSHOT.jar # at 10.32.0.185
+! 擇一
+java -jar mediator-0.0.1-SNAPSHOT-geth.jar     # at 10.32.0.181
+java -jar mediator-0.0.1-SNAPSHOT-infura.jar   # at 10.32.0.181
+
+java -jar controller-0.0.1-SNAPSHOT.jar        # at 10.32.0.185
 
 # 執行 (at 10.32.0.182)
 open firefox to
@@ -45,12 +53,12 @@ open firefox to
 ## API 測試
 - Import `swagger.json` to [Swagger](https://editor.swagger.io/)
 
-1. Log in 取得 token，前端會直接加至於 http header，所以 Swagger 會回傳網頁檔，而不是字串值
-2. Bearer 的部分 Swagger 跑不了，所以 log in 拿到 token 後，請改用 [Postman 7.3.4](https://www.getpostman.com/) 繼續測試
+1. Log in 取得 token，前端會直接加至於 http header，所以 `Swagger` 會回傳網頁檔，而不是字串值
+2. Bearer 的部分 `Swagger` 跑不了，所以 log in 拿到 token 後，請改用 [Postman 7.3.4](https://www.getpostman.com/) 繼續測試
 
 
 ## 說明
-- 因為 VM 空間有限 & 筆電環境比較好操作，所以我是先在筆電(Windows)上開發並測試，再送至 VM(Ubuntu) 執行 
+- 因為 VM 空間有限 & 筆電環境比較好操作，所以我是先在 `筆電(Windows)` 上開發並測試，再送至 `VM(Ubuntu)` 執行 
 
     **Note:** 建議 `How to Run` 執行完後都沒問題的話，直接在 VM 上裝 IDE，就不用來回跑
 
@@ -64,8 +72,7 @@ open firefox to
     - JDK 11
 3. `金鑰`、`憑證`、`合約`、`區塊鏈`、`資料庫`的部分如果有要修改，請參考各自的說明
 
-
-**Note:** 如果要在 Win10 上跑，請先自行安裝所需的 JDK、MySQL、Web3j、Geth、Ganache 等
+**Note:** 如果要在 Windows 上跑，請先自行安裝所需的 JDK、MySQL、Web3j、Geth、Ganache 等
 
 
 ## 金鑰說明
@@ -126,30 +133,34 @@ keytool -importcert -noprompt -keystore server.pfx -storepass secret -alias serv
 - 可至 [Remix](https://remix.ethereum.org) 撰寫合約
 - 編譯成功後於頁面右方下載 `.abi`(defines the smart contract methods) 與 `.bin`(for EVM)
 - 若不使用 Remix，寫好合約後可使用 [Solc](https://solidity.readthedocs.io/en/v0.4.24/installing-solidity.html) 編譯出 `.abi` 及 `.bin`
-```
+```properties
 C:/Users/hyc/Desktop> solc C:/Users/hyc/Desktop/tmp.sol --bin --abi --optimize -o C:/Users/hyc/Desktop
 ```
 - 下載 [Web3j's Command Line Tools](https://github.com/web3j/web3j/releases)
     - 建議下載3.5.0；若下載最新版4.3.0，測試過會發生不只以下提到的更多問題
     
 - 使用Web3j對 `.abi`、`.bin` 產出對應的 `.java`
-    - 有可能遇上此問題 `Transaction has failed with status: null. Gas used: xxxxx. (not-enough gas?)`
-    - 解決方法：將 `private static final String BINARY` 變數移除多餘的欄位，只留下**數字**的部分則可解決；經測試 `3.5.0` 及 `4.3.0` 兩版本皆存在此問題
 ```properties
 C:/Users/hyc/Desktop/web3j-4.3.0/bin> web3j solidity generate -b C:/Users/hyc/Desktop/tmp.bin -a C:/Users/hyc/Desktop/tmp.abi -o C:/Users/hyc/Desktop/ -p iis.sinica.ychsu.server
 ```
+
+**Note:** Server執行時有可能遇上此問題 `Transaction has failed with status: null. Gas used: xxxxx. (not-enough gas?)`
+
+Solution：將 `private static final String BINARY` 變數移除多餘的欄位，只留下**數字**的部分則可解決；經測試 `3.5.0` 及 `4.3.0` 兩版本皆存在此問題
+    
 
 
 ## 區塊鏈說明
 - Blockchain 測試環境有以下三種
 
-1. 開發框架 Truffle 的 [Ganache](https://www.trufflesuite.com/ganache)，為一本地的私有區塊鏈，特點為交易不需要消耗gas，並已內建多組帳號提供互動
-2. 官方測試鏈 Ethereum Test Networks: Ropsten, Rinkeby 等。要用官方測試鏈測鏈需要藉助 [Infura](https://infura.io/)，註冊並創建一個 project 後，只要拿 `Endpoint` 的 `Key` 並將 Web3j 的建立方式稍作修改就可以
-```
-Web3j web3j = Web3j.build(new HttpService("https://ropsten.infura.io/<ropsten-endpoint-key>"));
-```
-3. 自架私有鏈，使用 [Geth (Go Ethereum)](https://github.com/ethereum/go-ethereum/wiki/Installing-Geth)
-
+1. 開發框架 Truffle 的 `Ganache`，為一本地的私有區塊鏈，特點為交易不需要消耗 gas，並已內建多組帳號提供互動
+2. 官方測試鏈 Ethereum Test Networks: Ropsten, Rinkeby 等。要用官方測試鏈測鏈需要藉助 `Infura`，註冊並創建一個 project 後，只要拿 `Endpoint` 的 `Key` 並將 Web3j 的建立方式稍作修改就可以
+    ```properties
+    Web3j web3j = Web3j.build(new HttpService("https://ropsten.infura.io/<ropsten-endpoint-key>"));
+    ```
+    - 有一點需要注意，Infura 不提供 `filter` 的功能，因此 `activateFilter(web3j)` 的部分不會執行
+    - 若執行成功，可以到 [ropsten.etherscan](https://ropsten.etherscan.io/)，用自己的 address 去查詢交易的情形，應該也可以看出印出的訊息 `deployedAddress` 和 Etherscan 顯示 contract 的建立位置是相同的
+3. 自架私有鏈，使用 `Geth`
 ```properties
 # 區塊鏈已被初始化、執行，因此只要 `run.sh` 便可開始
 sudo run.sh
@@ -278,7 +289,8 @@ CREATE TABLE `preference` (
     - 測試 (https://10.32.0.181:8443/)
 
 **Note:** 不論是哪個環境，執行前記得資料庫跟區塊鏈都要先開
-**Note:** 看完覺得麻煩的話，就直接在 VM 上開發吧
+
+**Note:** 看完覺得麻煩的話，請直接在 VM 上開發
 
 
 ## _Ubuntu Install JDK_
@@ -361,8 +373,8 @@ spring.datasource.url = jdbc:mysql://127.0.0.1:3306/controller?useUnicode=true&c
 
 
 ## 其他
-- 目前 Controller A & B 的 DB 是建在一起，記得改一人一個
 - 若空間不夠，可以搜尋 `.ethash/` ，此資料夾為 Ethereum 做挖礦時的 PoW 所用，除181之外皆可刪除
+- 目前 Controller A & B 的 DB 是建在一起，記得改一人一個
 - 如果要建立新的資料表，記得一系列的建立 Entity > Repository > Service
 - 如果要一個 Server 要同時連兩個以上的 DB (e.g. MYSQL、AWS)，~~請修正`DataSourceConfig`，並仿照`PrimaryConfig.java`建立`TertiaryConfig.java`.~~
 - 存在 DB 中的密碼有加密
@@ -425,4 +437,4 @@ rm -rf /var/log/journal/e58b026cdf2c47798bacf1f0719baf5c
 
 
 ## _Further information_
-For further information, please refer to the [home](https://github.com/rookieyc).
+For further information, please refer to the [here](https://github.com/tienshaoku) or [home](https://github.com/rookieyc).
