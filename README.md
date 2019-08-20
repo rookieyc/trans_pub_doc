@@ -50,7 +50,31 @@ open firefox to
 ```
 
 
-## API 測試
+## _Source Code Arch_
+![image](https://github.com/rookieyc/transprivacy/blob/master/source_code_arch.PNG)
+
+1. iis.sinica.ychsu.mediator
+    - `db` : 資料庫相關
+      - Entity 可以直接對應到 table 中的欄位
+      - Repository 控制資料存取
+      - Service 作為 Controller 與 Dao(Repository) 的中介
+    - `jwt` : JSON Web Token
+      - JwtRequestFilter 為每筆請求做 Filter
+      - JwtTokenUtil 做 JWT 的驗證、生成等
+    - `parameter` : REST API 的參數
+    - `web3j` : Blockchain 相關
+    - mediator : MVC 中的 Controller
+    - WebSecurityConfig : 設定檔
+2. resources
+    - `keypairs` : 加解密、簽章用的金鑰
+    - `ssl` : MYSQL ssl
+    - `static` : js
+    - `templates` : html
+    - `tls` : web tls
+    - application.properties : 設定檔
+
+
+## API 測試 (Optional)
 - Import `swagger.json` to [Swagger](https://editor.swagger.io/)
 
 1. Log in 取得 token，前端會直接加至於 http header，所以 `Swagger` 會回傳網頁檔，而不是字串值
@@ -269,8 +293,8 @@ CREATE TABLE `preference` (
 2. Run `MediatorApplication` (Run/Debug Configuration 請選擇 MediatorApplication)
 3. 啟動後，可透過瀏覽器或 Swagger 進行測試
 4. 測試無誤後，接下來進行打包
+    - Run/Debug Configuration 請選擇 Maven，它會在 /mediator/target 下產出 `mediator-0.0.1-SNAPSHOT.jar`
     - 打包時如果希望順便進行測試，Command Line 請打上 `clean package`，反之，請打 `clean package -DskipTests`
-    - Run `to2Jar` (Run/Debug Configuration 請選擇 toJar)，它會在 /mediator/target 下產出 `mediator-0.0.1-SNAPSHOT.jar`
 
 - Ubuntu 部署與執行
 1. 先連線
