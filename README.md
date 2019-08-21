@@ -64,7 +64,7 @@ then connect to
     protocol.docx
     README.md
     swagger.json
-    sourcecode.7z
+    transprivacy.7z (all files)
 # 10.32.0.185
     /controller
     controller-0.0.1-SNAPSHOT.jar
