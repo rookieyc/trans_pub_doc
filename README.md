@@ -10,6 +10,8 @@ _A Transparent Framework for Privacy Enhancement_
 
 ## _System Arch Picture_
 - Import `arch.drawio` to [draw.io](https://www.draw.io/)
+    - 前兩頁可參考 `protocol.docx`
+    - 第三頁為架構圖
 
 
 ## _How to Run_
@@ -29,7 +31,7 @@ sudo ./run.sh                           # 進入 console
 miner.start(1)                          # 開始挖礦後 Blockchain 才會接收交易
 
 ! Infura
-! 請先對 W3j.java 進行修改，將 new HttpService 中的參數修改成新創立 Project 所得到的 ENDPOINT Key
+! 請直接改 source code，將 W3j.java 中 new HttpService 的參數修改成新創立 Project 所得到的 ENDPOINT Key
 Web3j web3j = Web3j.build(new HttpService("https://ropsten.infura.io/v3/e2c4f89bf4de4d13ab79fb1767e2d0de"));
 ! 接著重新打包成 mediator-0.0.1-SNAPSHOT-infura.jar
 
@@ -44,47 +46,71 @@ java -jar mediator-0.0.1-SNAPSHOT-infura.jar   # at 10.32.0.181
 java -jar controller-0.0.1-SNAPSHOT.jar        # at 10.32.0.185
 
 # 執行 (at 10.32.0.182)
-open firefox to
+firefox
+then connect to
     10.32.0.181:8443/signup
     10.32.0.185:8444/controller
 ```
 
 
 ## _Source Code Arch_
+```properties
+# 10.32.0.181
+    /mediator
+    mediator-0.0.1-SNAPSHOT-geth.jar
+    mediator-0.0.1-SNAPSHOT-infura.jar
+# 10.32.0.182
+    arch.drawio
+    protocol.docx
+    README.md
+    swagger.json
+    sourcecode.7z
+# 10.32.0.185
+    /controller
+    controller-0.0.1-SNAPSHOT.jar
+# 10.32.0.186
+    null
+```
+
 ![image](https://github.com/rookieyc/transprivacy/blob/master/source_code_arch.PNG)
 
+**Note:** 以 Mediator 為例，Controller 同理
+
 1. iis.sinica.ychsu.mediator
-    - `db` : 資料庫相關
-      - Entity 可以直接對應到 table 中的欄位
-      - Repository 控制資料存取
-      - Service 作為 Controller 與 Dao(Repository) 的中介
+    - `db` : 資料庫
+        - Entity 可以直接對應到資料表中的欄位
+        - Repository 控制資料存取
+        - Service 作為 Controller 與 Dao(Repository) 的中介層
+        - P.S. 若資料表有改動，Entity 記得也要改；若新增資料表，記得一系列建立 Entity > Repository > Service
     - `jwt` : JSON Web Token
-      - JwtRequestFilter 為每筆請求做 Filter
-      - JwtTokenUtil 做 JWT 的驗證、生成等
-    - `parameter` : REST API 的參數
-    - `web3j` : Blockchain 相關
+        - JwtRequestFilter 為每筆請求做 Filter
+        - JwtTokenUtil 做 JWT 的驗證、生成等
+    - `parameter` : RESTFUL API 的參數
+    - `web3j` : Blockchain
+        - xxxContract 都是自動產生的
+        - 與區塊鏈相關的設定都在 W3j
     - mediator : MVC 中的 Controller
-    - WebSecurityConfig : 設定檔
+    - WebSecurityConfig : Security 設定 (e.g. 部分路徑為 public，部分需要 token 才可以進行存取)
 2. resources
     - `keypairs` : 加解密、簽章用的金鑰
     - `ssl` : MYSQL ssl
     - `static` : js
     - `templates` : html
     - `tls` : web tls
-    - application.properties : 設定檔
+    - application.properties : 專案設定檔
 
 
-## API 測試 (Optional)
+## API 測試
 - Import `swagger.json` to [Swagger](https://editor.swagger.io/)
 
-1. Log in 取得 token，前端會直接加至於 http header，所以 `Swagger` 會回傳網頁檔，而不是字串值
-2. Bearer 的部分 `Swagger` 跑不了，所以 log in 拿到 token 後，請改用 [Postman 7.3.4](https://www.getpostman.com/) 繼續測試
+    1. Log in 取得 token，前端會直接加至於 http header，所以 `Swagger` 會回傳網頁檔，而不是字串值
+    2. Bearer 的部分 `Swagger` 跑不了，所以 log in 拿到 token 後，請改用 [Postman 7.3.4](https://www.getpostman.com/) 繼續測試
 
 
 ## 說明
-- 因為 VM 空間有限 & 筆電環境比較好操作，所以我是先在 `筆電(Windows)` 上開發並測試，再送至 `VM(Ubuntu)` 執行 
+- 因為 VM 空間有限 & 筆電環境比較好操作，所以我是先在筆電(Windows)上開發並測試，打包成 `.jar` 後再送至 VM(Ubuntu) 執行
 
-    **Note:** 建議 `How to Run` 執行完後都沒問題的話，直接在 VM 上裝 IDE，就不用來回跑
+    **Note:** 建議 `How to Run` 執行完後沒問題的話，直接在 VM 上裝 IDE ，之後就可以直接 run，不用再來回跑
 
     **Note:** 以下把東西傳到 VM 上的部分，如果已經改成全部都在 VM 上操作，請忽略
 
@@ -123,8 +149,11 @@ rsa -in controllerA-priv-key-pkcs1-256.pem -pubout -out controllerA-pub-key-pkcs
 
 ## 憑證說明
 - keytool
-- Self-signed Certificate
+- Self-signed Certificate (之後記得花錢買正式的)
 - 7月原先是用 `.p12`，但 `maven.plugin's filter` 會有問題，所以8月開始改用 `.pfx`
+- 以下以產生 Mediator Server's Certificate 為例，要做 Controller Server 憑證的話，只要把 IP 的.181 改成 .185 即可
+
+**Note:** 若有修改過憑證，記得 VM 上的瀏覽器要匯入新產生的 `rootca.pem` ，以順利使用 TLS
 
 ```properties
 # Generate Root CA's Keystore(.pfx) which contains the PK, SK and certificate
@@ -136,13 +165,13 @@ keytool -exportcert -keystore rootca.pfx -storepass secret -alias root-ca -rfc -
 ! Certificate: rootca.pfx、rootca.pem
 
 # Generate Server's Keystore(.pfx)
-keytool -genkeypair -keyalg RSA -keysize 2048 -alias server -dname "CN=ychsu, OU=sinica, O=iis, L=taipei, ST=taiwan, C=zh" -ext BC:c=ca:false -ext EKU:c=serverAuth -ext "SAN:c=DNS:localhost,IP:127.0.0.1" -validity 3650 -keystore server.pfx -storepass secret -keypass secret -storetype pkcs12
+keytool -genkeypair -keyalg RSA -keysize 2048 -alias server -dname "CN=ychsu, OU=sinica, O=iis, L=taipei, ST=taiwan, C=zh" -ext BC:c=ca:false -ext EKU:c=serverAuth -ext "SAN:c=DNS:localhost,IP:127.0.0.1,IP:10.32.0.181" -validity 3650 -keystore server.pfx -storepass secret -keypass secret -storetype pkcs12
 
 # Signing request(.csr) for server certificate
 keytool -certreq -keystore server.pfx -storepass secret -alias server -keypass secret -file server.csr
 
 # Export Server's certificate(.pem)
-keytool -gencert -keystore rootca.pfx -storepass secret -infile server.csr -alias root-ca -keypass secret -ext BC:c=ca:false -ext EKU:c=serverAuth -ext "SAN:c=DNS:localhost,IP:127.0.0.1" -validity 3650 -rfc -outfile server.pem
+keytool -gencert -keystore rootca.pfx -storepass secret -infile server.csr -alias root-ca -keypass secret -ext BC:c=ca:false -ext EKU:c=serverAuth -ext "SAN:c=DNS:localhost,IP:127.0.0.1,IP:10.32.0.181" -validity 3650 -rfc -outfile server.pem
 
 ! Certificate: server.pfx、server.pem
 ! Request:     server.csr
@@ -161,16 +190,14 @@ keytool -importcert -noprompt -keystore server.pfx -storepass secret -alias serv
 C:/Users/hyc/Desktop> solc C:/Users/hyc/Desktop/tmp.sol --bin --abi --optimize -o C:/Users/hyc/Desktop
 ```
 - 下載 [Web3j's Command Line Tools](https://github.com/web3j/web3j/releases)
-    - 建議下載3.5.0；若下載最新版4.3.0，測試過會發生不只以下提到的更多問題
-    
-- 使用Web3j對 `.abi`、`.bin` 產出對應的 `.java`
+    - 建議下載 3.5.0；若下載最新版 4.3.0，測試過會發生不只以下提到的更多問題
+- 使用 Web3j 對 `.abi`、`.bin` 產出對應的 `.java`
 ```properties
 C:/Users/hyc/Desktop/web3j-4.3.0/bin> web3j solidity generate -b C:/Users/hyc/Desktop/tmp.bin -a C:/Users/hyc/Desktop/tmp.abi -o C:/Users/hyc/Desktop/ -p iis.sinica.ychsu.server
 ```
+**Note:** 若 Server 在執行時有遇到此問題 `Transaction has failed with status: null. Gas used: xxxxx. (not-enough gas?)`
 
-**Note:** Server執行時有可能遇上此問題 `Transaction has failed with status: null. Gas used: xxxxx. (not-enough gas?)`
-
-Solution：將 `private static final String BINARY` 變數移除多餘的欄位，只留下**數字**的部分則可解決；經測試 `3.5.0` 及 `4.3.0` 兩版本皆存在此問題
+**Solution:** 將 `private static final String BINARY` 變數移除多餘的欄位，只留下 **數字** 的部分則可 (經測試 `3.5.0` 及 `4.3.0` 兩版本皆存在此問題)
     
 
 
@@ -290,11 +317,11 @@ CREATE TABLE `preference` (
     
     **Note:** 接下來以 Intellij IDE 打包 Mediator 進行說明
 
-2. Run `MediatorApplication` (Run/Debug Configuration 請選擇 MediatorApplication)
+2. Run (Run/Debug Configuration 請選擇 Spring boot)
 3. 啟動後，可透過瀏覽器或 Swagger 進行測試
 4. 測試無誤後，接下來進行打包
-    - Run/Debug Configuration 請選擇 Maven，它會在 /mediator/target 下產出 `mediator-0.0.1-SNAPSHOT.jar`
-    - 打包時如果希望順便進行測試，Command Line 請打上 `clean package`，反之，請打 `clean package -DskipTests`
+    - Run (Run/Debug Configuration 請選擇 Maven)，它會在 /mediator/target 下產出 `mediator-0.0.1-SNAPSHOT.jar`
+    - 打包時如果希望順便進行測試，Command Line 請打上 `clean package`，反之，請打 `clean package -DskipTests` (測試的話環境也都要開好)
 
 - Ubuntu 部署與執行
 1. 先連線
@@ -314,11 +341,11 @@ CREATE TABLE `preference` (
 
 **Note:** 不論是哪個環境，執行前記得資料庫跟區塊鏈都要先開
 
-**Note:** 看完覺得麻煩的話，請直接在 VM 上開發
+**Note:** pscp、PuTTy、Xming 的組合可以改用 MobaXterm + enable X11 取代 (2019.08.21)
 
 
 ## _Ubuntu Install JDK_
-Java 11 開始不能直接安裝了，要先至 Oracle 官網登入並下載 jdk-11.0.4_linux-x64_bin.tar.gz
+- Java 11 開始不能直接安裝了，要先至 Oracle 官網登入並下載 jdk-11.0.4_linux-x64_bin.tar.gz
 ```properties
 # 刪掉之前裝的雜物 (可以跳過)
 apt list --installed
@@ -397,13 +424,10 @@ spring.datasource.url = jdbc:mysql://127.0.0.1:3306/controller?useUnicode=true&c
 
 
 ## 其他
-- 若空間不夠，可以搜尋 `.ethash/` ，此資料夾為 Ethereum 做挖礦時的 PoW 所用，除181之外皆可刪除
-- 目前 Controller A & B 的 DB 是建在一起，記得改一人一個
-- 如果要建立新的資料表，記得一系列的建立 Entity > Repository > Service
-- 如果要一個 Server 要同時連兩個以上的 DB (e.g. MYSQL、AWS)，~~請修正`DataSourceConfig`，並仿照`PrimaryConfig.java`建立`TertiaryConfig.java`.~~
+- 若空間不夠，可以搜尋 `.ethash/` ，此資料夾為 Ethereum 做挖礦時的 PoW 所用，除 181 之外皆可刪除
+- 目前為了方便 Controller A & B 的資料庫是建在一起，記得改一人一個
+- 如果要一個 Server 要同時連兩個以上的 DB (e.g. MYSQL、AWS)，~~請修正`DataSourceConfig`，並仿照`PrimaryConfig.java`建立`TertiaryConfig.java`.~~ 
 - 存在 DB 中的密碼有加密
-- 目前是自簽憑證，記得花錢買正式的
-- API 中，部分路徑為 public，部分需要 token 才可以進行存取
 - 如過要從外部位址用 http 去連 VM，必須先解決 
     1. spring boot embedded tomcat auto transform ipv4 to v6 
     2. firewall only allow port 22 or ip authorization
@@ -457,6 +481,38 @@ FLUSH PRIVILEGES;
 # Linux clear log
 rm -rf /var/log/journal/e58b026cdf2c47798bacf1f0719baf5c
  
+```
+
+
+## _MobaXterm enable X11 Forwarding_
+```properties
+# install
+sudo yum install xorg-x11-xauth xorg-x11-fonts-* xorg-x11-font-utils xorg-x11-fonts-Type1
+
+# vim /etc/ssh/ssh_config
+ForwardX11 yes
+
+SendEnv LANG LC_*
+HashKnownHosts yes
+GSSAPIAuthentication yes
+AddressFamily inet
+
+# vim /etc/ssh/sshd_config
+ChallengeResponseAuthentication no
+
+UsePAM yes
+
+AllowTcpForwarding yes
+X11Forwarding yes
+X11UseLocalhost no
+PrintMotd no
+
+AcceptEnv LANG LC_*
+Subsystem sftp  /usr/lib/openssh/sftp-server
+PasswordAuthentication yes
+
+# restart
+sudo systemctl restart sshd.service
 ```
 
 
