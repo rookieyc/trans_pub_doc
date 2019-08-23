@@ -1,4 +1,4 @@
-# _Transprivacy_
+﻿# _Transprivacy_
 _A Transparent Framework for Privacy Enhancement_
 
 
@@ -55,6 +55,8 @@ then connect to
 
 ## _Source Code Arch_
 ```properties
+# 放置 VM 上的資料分別如下
+
 # 10.32.0.181
     /mediator
     mediator-0.0.1-SNAPSHOT-geth.jar
@@ -64,7 +66,7 @@ then connect to
     protocol.docx
     README.md
     swagger.json
-    sourcecode.7z
+    transprivacy.7z (all files)
 # 10.32.0.185
     /controller
     controller-0.0.1-SNAPSHOT.jar
@@ -72,7 +74,7 @@ then connect to
     null
 ```
 
-![image](https://github.com/rookieyc/transprivacy/blob/master/source_code_arch.PNG)
+<img align="left" width="10" height="10" src="https://github.com/rookieyc/transprivacy/blob/master/Files/source_code_arch.png">
 
 **Note:** 以 Mediator 為例，Controller 同理
 
