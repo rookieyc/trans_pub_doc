@@ -10,8 +10,8 @@ _A Transparent Framework for Privacy Enhancement_
 
 ## _System Arch Picture_
 - Import `arch.drawio` to [draw.io](https://www.draw.io/)
-    - 前兩頁可參考 `protocol.docx`
-    - 第三頁為架構圖
+    1. 前兩頁可參考 `protocol.docx`
+    2. 第三頁為架構圖
 
 
 ## _How to Run_
@@ -74,9 +74,9 @@ then connect to
     null
 ```
 
-<img align="left" width="10" height="10" src="https://github.com/rookieyc/transprivacy/blob/master/Files/source_code_arch.png">
+<img align="right" width="300" height="600" src="https://github.com/rookieyc/transprivacy/blob/master/Files/source_code_arch.png">
 
-**Note:** 以 Mediator 為例，Controller 同理
+接下來以 `/mediator` 為例，Controller 同理
 
 1. iis.sinica.ychsu.mediator
     - `db` : 資料庫
