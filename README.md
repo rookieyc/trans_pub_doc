@@ -35,7 +35,7 @@ miner.start(1)                          # 開始挖礦後 Blockchain 才會接�
 Web3j web3j = Web3j.build(new HttpService("https://ropsten.infura.io/v3/e2c4f89bf4de4d13ab79fb1767e2d0de"));
 ! 接著重新打包成 mediator-0.0.1-SNAPSHOT-infura.jar
 
-若想要測 IPFS
+另外，若想要測IPFS，打開後就能接上了
 ipfs daemon
 
 # 開伺服器 (at 10.32.0.181, 10.32.0.185)
