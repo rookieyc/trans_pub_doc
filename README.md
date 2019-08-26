@@ -64,12 +64,14 @@ then connect to
     /mediator
     mediator-0.0.1-SNAPSHOT-geth.jar
     mediator-0.0.1-SNAPSHOT-infura.jar
-# 10.32.0.182
+    
     arch.drawio
     protocol.docx
     README.md
     swagger.json
     transprivacy.7z (all files)
+# 10.32.0.182
+    null
 # 10.32.0.185
     /controller
     controller-0.0.1-SNAPSHOT.jar
