@@ -35,9 +35,6 @@ miner.start(1)                          # 開始挖礦後 Blockchain 才會接�
 Web3j web3j = Web3j.build(new HttpService("https://ropsten.infura.io/v3/e2c4f89bf4de4d13ab79fb1767e2d0de"));
 ! 接著重新打包成 mediator-0.0.1-SNAPSHOT-infura.jar
 
-另外，若想要測IPFS，打開後就能接上了
-ipfs daemon
-
 # 開伺服器 (at 10.32.0.181, 10.32.0.185)
 sudo -i 
 cd /home/ychsu
@@ -98,11 +95,14 @@ then connect to
     - WebSecurityConfig : Security 設定 (e.g. 部分路徑為 public，部分需要 token 才可以進行存取)
 2. resources
     - `keypairs` : 加解密、簽章用的金鑰
+    - `solidity` : solidity
     - `ssl` : MYSQL ssl
     - `static` : js
     - `templates` : html
     - `tls` : web tls
     - application.properties : 專案設定檔
+3. target
+    - mediator-0.0.1-SNAPSHOT.jar: 打包後的檔案 (請依照打包的程式碼，自行在檔名後加上 geth/infura 以區分)
 
 
 ## API 測試
